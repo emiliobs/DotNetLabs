@@ -34,6 +34,11 @@ namespace DotNetLabs.Server.Models
 
         public VideosPrivacy Privacy  { get; set; }
 
-        
+        public virtual List<PlayListVideo> PlayListVideos { get; set; }
+
+        public virtual List<Tags> Tags { get; set; }
+
+        public virtual List<Comments> Comments { get; set; }
+
     }
 }

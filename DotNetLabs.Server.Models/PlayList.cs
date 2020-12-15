@@ -14,13 +14,10 @@ namespace DotNetLabs.Server.Models
         public string Name { get; set; }
         
         [StringLength(5000)]
-        public string Description { get; set; }       
-        
-        
-      
+        public string Description { get; set; }
 
-        
-        
-       
+        public virtual List<PlayListVideo> PlayListVideos { get; set; }
+
+
     }
 }
