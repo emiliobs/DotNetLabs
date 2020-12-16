@@ -26,7 +26,7 @@ namespace DotNetLabs.Blazor.Server
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sqlOptions =>
                 {
-                    sqlOptions.MigrationsAssembly("DotNetLabs.Server");
+                    sqlOptions.MigrationsAssembly("DotNetLabs.Blazor.Server");
                 });
             });
 
