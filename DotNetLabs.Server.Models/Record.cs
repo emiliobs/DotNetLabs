@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace DotNetLabs.Server.Models
 {
@@ -15,7 +13,7 @@ namespace DotNetLabs.Server.Models
         [Key]
         public string Id { get; set; }
 
-       
+
     }
 
 }

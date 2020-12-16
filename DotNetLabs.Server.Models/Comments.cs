@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace DotNetLabs.Server.Models
 {
@@ -12,7 +10,7 @@ namespace DotNetLabs.Server.Models
         [StringLength(5000)]
         public string Content { get; set; }
 
-        public int  Likes { get; set; }
+        public int Likes { get; set; }
 
         public virtual List<Comments> Replys { get; set; }
 

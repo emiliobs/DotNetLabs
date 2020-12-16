@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace DotNetLabs.Server.Models
 {
@@ -28,11 +27,11 @@ namespace DotNetLabs.Server.Models
 
         public int Likes { get; set; }
 
-        public DateTime PublishingDate{ get; set; }
+        public DateTime PublishingDate { get; set; }
 
         public Category Category { get; set; }
 
-        public VideosPrivacy Privacy  { get; set; }
+        public VideosPrivacy Privacy { get; set; }
 
         public virtual List<PlayListVideo> PlayListVideos { get; set; }
 
