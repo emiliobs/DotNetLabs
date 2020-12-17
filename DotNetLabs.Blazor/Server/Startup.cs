@@ -1,4 +1,5 @@
 using DotNetLabs.Server.Models;
+using DotNetLabs.Server.Models.DataSeeding;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -63,7 +64,8 @@ namespace DotNetLabs.Blazor.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, 
+                              RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -76,6 +78,10 @@ namespace DotNetLabs.Blazor.Server
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            //Here call the UserSeeding;
+            var dataSeeding = new UserSeeding(userManager, roleManager);
+            dataSeeding.SeedData().Wait();
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
