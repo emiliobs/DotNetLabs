@@ -15,7 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\DotNetLabs.Repository\DotNetLabs.Server.Repository.csproj" />
+    <ProjectReference Include="..\..\DotNetLabs.Server.Infrastructure\DotNetLabs.Server.Infrastructure.csproj" />
     <ProjectReference Include="..\..\DotNetLabs.Server.Models\DotNetLabs.Server.Models.csproj" />
+    <ProjectReference Include="..\..\DotNetLabs.Server.Services\DotNetLabs.Server.Services.csproj" />
     <ProjectReference Include="..\Client\DotNetLabs.Blazor.Client.csproj" />
     <ProjectReference Include="..\Shared\DotNetLabs.Blazor.Shared.csproj" />
   </ItemGroup>

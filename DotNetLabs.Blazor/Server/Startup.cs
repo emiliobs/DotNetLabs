@@ -1,5 +1,8 @@
+using DotNetLabs.Server.Infrastructure;
 using DotNetLabs.Server.Models;
 using DotNetLabs.Server.Models.DataSeeding;
+using DotNetLabs.Server.Repository;
+using DotNetLabs.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,6 +62,16 @@ namespace DotNetLabs.Blazor.Server
                 };
             });
 
+            services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+            services.AddScoped(sp => new AuthOptions{ 
+            
+                Audience = Configuration["AuthSettings:Audience"],
+                Issuer = Configuration["AuthSettings:Issuer"],
+                Key = Configuration["AuthSettings:Key"]
+                 
+            });
+            services.AddScoped<IUserService, UserService>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -85,9 +98,10 @@ namespace DotNetLabs.Blazor.Server
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
-            app.UseStaticFiles();
-
+            app.UseStaticFiles();            
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
