@@ -27,13 +27,20 @@ namespace DotNetLabs.Server.Services
 
             if (user == null)
             {
-                //TODO: Return response with message user not found
-                return null;
+                return new LoginResponse 
+                {
+                   Message = "Invalid Username or Password",
+                   IsSuccess = false,
+                };
             }
 
             if (!(await _unitOfWork.Users.CheckPasswordAsync(user, loginRequest.Password)))
             {
-                return null;
+                return new LoginResponse 
+                {
+                  Message = "Invalid Username or Passwrod",
+                  IsSuccess = false,
+                };
             }
 
             string userRole = await _unitOfWork.Users.GetUserRoleAsync(user);
@@ -48,20 +55,23 @@ namespace DotNetLabs.Server.Services
             };
 
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authOptions.Key));
+            var expireDate = DateTime.Now.AddDays(30);
 
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _authOptions.Issuer,
                 audience: _authOptions.Audience,
                 claims: claims,
-                expires: DateTime.Now.AddDays(30),
+                expires: expireDate,
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 
             string tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return new
+            return new LoginResponse
             {
+                Message = "Welcome to DotNet Lab.",
+                IsSuccess = true,
                 AccessToken = tokenAsString,
-                expireDate = token.ValidTo,
+                ExpireDate = expireDate,
             };
 
         }
