@@ -1,10 +1,6 @@
 ﻿using DotNetLabs.Blazor.Shared;
 using DotNetLabs.Server.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace DotNetLabs.Blazor.Server.Controllers
@@ -17,17 +13,32 @@ namespace DotNetLabs.Blazor.Server.Controllers
 
         public AutheticationController(IUserService userService)
         {
-            this._userService = userService;
+            _userService = userService;
         }
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginRequest model)
         {
-            var loginResponse = await _userService.GenerateTokenAsync(model);
-            if (loginResponse == null)
-                return BadRequest("Invalid UserName or Password");
+            var result = await _userService.GenerateTokenAsync(model);
 
-            return Ok(loginResponse);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register(RegisterRequest model)
+        {
+            var result = await _userService.RegisterUserAsync(model);
+
+            if (result.IsSuccess)
+                return Ok(result);
+
+
+            return BadRequest(result);
         }
 
     }

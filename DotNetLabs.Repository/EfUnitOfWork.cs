@@ -1,8 +1,5 @@
 ﻿using DotNetLabs.Server.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DotNetLabs.Server.Repository
@@ -27,14 +24,14 @@ namespace DotNetLabs.Server.Repository
             {
                 if (_users == null)
                     _users = new IdentityUserRepository(_userManager, _roleManager);
-               
+
                 return _users;
             }
         }
 
         public async Task CommitChangesAsync()
         {
-           await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
         }
     }
 }

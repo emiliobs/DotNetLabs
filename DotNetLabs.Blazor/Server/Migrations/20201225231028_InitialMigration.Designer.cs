@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DotNetLabs.Blazor.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201216000417_InitializeDatabase")]
-    partial class InitializeDatabase
+    [Migration("20201225231028_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -27,7 +27,7 @@ namespace DotNetLabs.Server.Repository
             return await _userManager.FindByIdAsync(id);
         }
 
-        public async Task CreateUserAsync(ApplicationUser user, string role, string password)
+        public async Task CreateUserAsync(ApplicationUser user, string password, string role)
         {
             await _userManager.CreateAsync(user, password);
             await _userManager.AddToRoleAsync(user, role);

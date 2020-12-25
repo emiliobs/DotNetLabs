@@ -1,5 +1,6 @@
 ﻿using DotNetLabs.Blazor.Shared;
 using DotNetLabs.Server.Infrastructure;
+using DotNetLabs.Server.Models;
 using DotNetLabs.Server.Repository;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -21,25 +22,25 @@ namespace DotNetLabs.Server.Services
             _authOptions = authOptions;
         }
 
-        public async Task<object> GenerateTokenAsync(LoginRequest loginRequest)
+        public async Task<LoginResponse> GenerateTokenAsync(LoginRequest loginRequest)
         {
             Models.ApplicationUser user = await _unitOfWork.Users.GetUserByEmailAsync(loginRequest.Email);
 
             if (user == null)
             {
-                return new LoginResponse 
+                return new LoginResponse
                 {
-                   Message = "Invalid Username or Password",
-                   IsSuccess = false,
+                    Message = "Invalid Username or Password",
+                    IsSuccess = false,
                 };
             }
 
             if (!(await _unitOfWork.Users.CheckPasswordAsync(user, loginRequest.Password)))
             {
-                return new LoginResponse 
+                return new LoginResponse
                 {
-                  Message = "Invalid Username or Passwrod",
-                  IsSuccess = false,
+                    Message = "Invalid Username or Passwrod",
+                    IsSuccess = false,
                 };
             }
 
@@ -55,7 +56,7 @@ namespace DotNetLabs.Server.Services
             };
 
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_authOptions.Key));
-            var expireDate = DateTime.Now.AddDays(30);
+            DateTime expireDate = DateTime.Now.AddDays(30);
 
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: _authOptions.Issuer,
@@ -74,6 +75,36 @@ namespace DotNetLabs.Server.Services
                 ExpireDate = expireDate,
             };
 
+        }
+
+        public async Task<OperationResponse<string>> RegisterUserAsync(RegisterRequest model)
+        {
+            var userByEmail = await _unitOfWork.Users.GetUserByEmailAsync(model.Email);
+
+            if (userByEmail != null)
+            {
+                return new OperationResponse<string>
+                {
+                    IsSuccess = false,
+                    Message = "User is already Exist",
+                };
+            }
+
+            var user = new ApplicationUser
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                UserName = model.Email,
+            };
+
+            await _unitOfWork.Users.CreateUserAsync(user, model.Password, "User");
+
+            return new OperationResponse<string>
+            {
+                Message = "Welcome to DotNet Labs, You were Added",
+                IsSuccess = true,
+            };
         }
     }
 }

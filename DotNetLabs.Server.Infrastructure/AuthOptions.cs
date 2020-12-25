@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DotNetLabs.Server.Infrastructure
+﻿namespace DotNetLabs.Server.Infrastructure
 {
     public class AuthOptions
     {
@@ -10,6 +6,6 @@ namespace DotNetLabs.Server.Infrastructure
 
         public string Audience { get; set; }
 
-        public string  Key { get; set; }
+        public string Key { get; set; }
     }
 }

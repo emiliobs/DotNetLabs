@@ -38,18 +38,18 @@ namespace DotNetLabs.Blazor.Server
                 });
             });
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => 
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
             }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-            services.AddAuthentication(auth => 
+            services.AddAuthentication(auth =>
             {
                 auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options => 
+            }).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
@@ -63,12 +63,13 @@ namespace DotNetLabs.Blazor.Server
             });
 
             services.AddScoped<IUnitOfWork, EfUnitOfWork>();
-            services.AddScoped(sp => new AuthOptions{ 
-            
+            services.AddScoped(sp => new AuthOptions
+            {
+
                 Audience = Configuration["AuthSettings:Audience"],
                 Issuer = Configuration["AuthSettings:Issuer"],
                 Key = Configuration["AuthSettings:Key"]
-                 
+
             });
             services.AddScoped<IUserService, UserService>();
 
@@ -77,7 +78,7 @@ namespace DotNetLabs.Blazor.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, 
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager,
                               RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
@@ -98,7 +99,7 @@ namespace DotNetLabs.Blazor.Server
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
-            app.UseStaticFiles();            
+            app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
