@@ -6,12 +6,14 @@ using DotNetLabs.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 namespace DotNetLabs.Blazor.Server
@@ -71,7 +73,34 @@ namespace DotNetLabs.Blazor.Server
                 Key = Configuration["AuthSettings:Key"]
 
             });
+
+            services.AddScoped(sp =>
+            {
+                var httpContext = sp.GetService<IHttpContextAccessor>().HttpContext;
+                var identityOptions = new DotNetLabs.Server.Infrastructure.IdentityOptions();
+
+                if (httpContext.User.Identity.IsAuthenticated)
+                {
+                    var id = httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    var firstName = httpContext.User.FindFirst(ClaimTypes.GivenName).Value;
+                    var lastName = httpContext.User.FindFirst(ClaimTypes.Surname).Value;
+                    var email = httpContext.User.FindFirst(ClaimTypes.Email).Value;
+                    var role = httpContext.User.FindFirst(ClaimTypes.Role).Value;
+
+                    identityOptions.UserId = id;
+                    identityOptions.Email = email;
+                    identityOptions.FullName = $"{firstName} {lastName}";
+                    identityOptions.IsAdmin = role == "Admin" ? true : false;
+                }
+
+                return identityOptions;
+
+            });
+
+            services.AddHttpContextAccessor();
+            //TODO: Uisn attributes to register the services
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPlayListServices, PlayListService>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();

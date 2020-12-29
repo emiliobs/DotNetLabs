@@ -10,12 +10,14 @@ namespace DotNetLabs.Server.Repository
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _db;
         private IUserRepository _users;
+        private IPlayListRespository _playList;
+
 
         public EfUnitOfWork(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext db)
         {
-            this._userManager = userManager;
-            this._roleManager = roleManager;
-            this._db = db;
+            _userManager = userManager;
+            _roleManager = roleManager;
+            _db = db;
         }
 
         public IUserRepository Users
@@ -23,15 +25,34 @@ namespace DotNetLabs.Server.Repository
             get
             {
                 if (_users == null)
+                {
                     _users = new IdentityUserRepository(_userManager, _roleManager);
+                }
 
                 return _users;
             }
         }
 
-        public async Task CommitChangesAsync()
+
+
+        public IPlayListRespository PlayList
         {
-            await _db.SaveChangesAsync();
+            get
+            {
+                if (_playList == null)
+                {
+                    _playList = new PLayListRepository(_db);
+                }
+
+                return _playList;
+            }
+
+        }
+
+
+        public async Task CommitChangesAsync(string userId)
+        {
+            await _db.SaveChangesAsync(userId);
         }
     }
 }

@@ -6,7 +6,9 @@ namespace DotNetLabs.Server.Repository
     {
         IUserRepository Users { get; }
 
-        Task CommitChangesAsync();
+        IPlayListRespository PlayList { get; }
+
+        Task CommitChangesAsync(string userId);
     }
 
 }

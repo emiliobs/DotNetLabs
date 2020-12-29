@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DotNetLabs.Server.Models
 {
@@ -19,6 +22,8 @@ namespace DotNetLabs.Server.Models
         public DbSet<Comments> Comments { get; set; }
 
         public DbSet<Tags> Tags { get; set; }
+
+        private string _userId = null;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -53,6 +58,49 @@ namespace DotNetLabs.Server.Models
                    .OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(builder);
+        }
+
+
+        public async Task SaveChangesAsync(string userId)
+        {
+            _userId = userId;
+            await SaveChangesAsync();
+        }
+
+        public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            foreach (var item in ChangeTracker.Entries())
+            {
+                if (item.Entity is UserRecord)
+                {
+                    var userRecord = (UserRecord)item.Entity;
+
+                    switch (item.State)
+                    {
+                        case EntityState.Detached:
+                            break;
+                        case EntityState.Unchanged:
+                            break;
+                        case EntityState.Deleted:
+                            break;
+                        case EntityState.Modified:
+                            userRecord.ModificationDate = DateTime.UtcNow;
+                            userRecord.ModifiedByUserId = _userId;
+                            break;
+                        case EntityState.Added:
+                            userRecord.ModificationDate = DateTime.UtcNow;
+                            userRecord.ModifiedByUserId = _userId;
+                            userRecord.CreationDate = DateTime.UtcNow;
+                            userRecord.CreateByUserId = _userId;
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
         }
 
     }
