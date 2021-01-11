@@ -87,11 +87,6 @@ namespace DotNetLabs.Server.Services
 
         }
 
-        public async Task<OperationResponse<PlayListDetail>> RemovePlayListDetailAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<OperationResponse<PlayListDetail>> UpdatePlayListDetailAsync(PlayListDetail playListDetail)
         {
             var playList = await _unitOfWork.PlayList.GetPLayListByIdAsync(playListDetail.Id);
@@ -106,17 +101,43 @@ namespace DotNetLabs.Server.Services
                 };
             }
 
-                playList.Name = playListDetail.Name;
-                playList.Description = playListDetail.Description;
+            playList.Name = playListDetail.Name;
+            playList.Description = playListDetail.Description;
 
-                await _unitOfWork.CommitChangesAsync(_identityOptions.UserId);
+            await _unitOfWork.CommitChangesAsync(_identityOptions.UserId);
 
+            return new OperationResponse<PlayListDetail>
+            {
+                IsSuccess = true,
+                Message = "Playlist has been Update Successfully!",
+                Data = playListDetail,
+            };
+        }
+
+        public async Task<OperationResponse<PlayListDetail>> RemovePlayListDetailAsync(string id)
+        {
+            var playList = await _unitOfWork.PlayList.GetPLayListByIdAsync(id);
+
+            if (playList == null)
+            {
                 return new OperationResponse<PlayListDetail> 
-                {
-                   IsSuccess = true,
-                   Message = "Playlist has been Update Successfully!",
-                   Data = playListDetail,
+                { 
+                  IsSuccess = false,
+                  Data = null,
+                  Message = "PlayList not Found!",
                 };
+            }
+
+            _unitOfWork.PlayList.RemovePlayList(playList);
+
+            await _unitOfWork.CommitChangesAsync(_identityOptions.UserId);
+
+            return new OperationResponse<PlayListDetail> 
+            {
+               IsSuccess = true,
+               Data = playList.ToPlayListDetail(),
+               Message = "PlayList has been Delelted Successfully!",
+            };
         }
     }
 }

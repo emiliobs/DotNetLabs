@@ -48,5 +48,18 @@ namespace DotNetLabs.Blazor.Server.Controllers
 
             return BadRequest();
         }
+
+        [HttpDelete("DeleteListDetail")]
+        public async Task<IActionResult> DeleteListDetail(string id)
+        {
+            var result = await _playListServices.RemovePlayListDetailAsync(id);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
     }
 }
