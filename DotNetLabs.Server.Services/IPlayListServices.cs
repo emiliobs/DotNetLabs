@@ -11,6 +11,8 @@ namespace DotNetLabs.Server.Services
 
         Task<OperationResponse<PlayListDetail>> RemovePlayListDetailAsync(string id);
 
+        CollectionResponse<PlayListDetail> GetAllPlayListAsync(int pageNumber, int pageSize);
+
         //Task<OperationResponse<PlayListDetail>> (PlayListDetail PlayListDetail);
     }
 }
