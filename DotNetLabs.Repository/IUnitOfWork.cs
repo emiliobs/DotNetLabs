@@ -8,6 +8,8 @@ namespace DotNetLabs.Server.Repository
 
         IPlayListRespository PlayList { get; }
 
+        public IVideosRepository Videos { get;}
+
         Task CommitChangesAsync(string userId);
     }
 

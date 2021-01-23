@@ -27,7 +27,7 @@ namespace DotNetLabs.Server.Models
 
         public int Likes { get; set; }
 
-        public DateTime PublishingDate { get; set; }
+        public DateTime? PublishingDate { get; set; }
 
         public Category Category { get; set; }
 

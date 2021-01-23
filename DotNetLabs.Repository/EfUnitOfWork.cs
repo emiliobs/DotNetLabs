@@ -11,6 +11,7 @@ namespace DotNetLabs.Server.Repository
         private readonly ApplicationDbContext _db;
         private IUserRepository _users;
         private IPlayListRespository _playList;
+        private IVideosRepository _videos;
 
 
         public EfUnitOfWork(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext db)
@@ -49,6 +50,19 @@ namespace DotNetLabs.Server.Repository
 
         }
 
+        public IVideosRepository Videos 
+        {
+            get
+            {
+                if (_videos == null)
+                {
+                    _videos = new VideoRespositorio(_db);
+                }
+
+                return _videos;
+            }
+          
+        }
 
         public async Task CommitChangesAsync(string userId)
         {
